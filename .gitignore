@@ -1,3 +1,5 @@
 /node_modules
 .env
 /backend/openai_epi_test.py
+__pycache__/
+*.pyc
