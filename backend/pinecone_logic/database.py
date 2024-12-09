@@ -34,7 +34,7 @@ embeddings = pc_client.inference.embed(
 
 # Create an index with the appropriate dimension
 index_name = "example-index1"
-pc_client.create_index(index_name, dimension=1024, metric="cosine", spec=ServerlessSpec(cloud="aws",region="us-east-1"))  # Dimension should match the model's output
+pc_client.create_index(index_name, dimension=1536, metric="cosine", spec=ServerlessSpec(cloud="aws",region="us-east-1"))  # Dimension should match the model's output
 index = pc_client.Index(index_name)
 
 # Prepare data for upsert

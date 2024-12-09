@@ -1,2 +1,4 @@
 pinecone-client
 python-dotenv
+tiktoken
+langchain-community

@@ -1,28 +1,7 @@
+import time
 from pinecone import ServerlessSpec
 
-def upsert_data(index, embeddings, texts, namespace="default"):
-    """
-    Upserts embeddings and metadata into the specified Pinecone index.
-
-    Args:
-        index (pinecone.Index): The Pinecone index.
-        embeddings (list): Embedding vectors.
-        texts (list): Original text data.
-        namespace (str): Namespace for storing the vectors.
-
-    Returns:
-        dict: Upsert response from Pinecone.
-    """
-    vectors = [
-        {"id": f"sentence-{i}", "values": embedding['values'], "metadata": {"text": text}}
-        for i, (embedding, text) in enumerate(zip(embeddings, texts))
-    ]
-
-    response = index.upsert(vectors=vectors, namespace=namespace)
-    print(f"Upserted {len(vectors)} vectors to namespace '{namespace}'.")
-    return response
-
-def create_pinecone_index(pinecone_client, index_name, dimension=1024, metric="cosine", cloud="aws", region="us-east-1"):
+def create_pinecone_index(pinecone_client, index_name, dimension=1536, metric="cosine", cloud="aws", region="us-east-1"):
     """
     Creates a Pinecone index if it doesn't already exist.
 
@@ -45,6 +24,7 @@ def create_pinecone_index(pinecone_client, index_name, dimension=1024, metric="c
             metric=metric,
             spec=ServerlessSpec(cloud=cloud, region=region)
         )
+        time.sleep(10)
     else:
         print(f"Index '{index_name}' already exists.")
 
@@ -70,6 +50,11 @@ def fetch_pinecone_index(client, index_name):
     
     # Return the index object
     return client.Index(index_name)
+
+def check_index_exists(client, index_name):
+    if index_name not in client.list_indexes():
+        return False
+    else: return True
 
 
 def generateEmbeddings( pinecone_client, inputs=None, model="multilingual-e5-large", input_type="passage", truncate="END" ):
